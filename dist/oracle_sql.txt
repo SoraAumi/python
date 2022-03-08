@@ -1,0 +1,4 @@
+begin
+    hn_simple_util_pkg.archive_batch_auto(37522);
+    commit;
+end;

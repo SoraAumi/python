@@ -1,0 +1,26 @@
+[
+  {
+    "project": "HN",
+    "env_info": [
+      {
+        "db_url" : "10.213.234.220/orcl",
+        "db_username": "HNTC_DEV",
+        "db_password": "HNTC_DEV",
+        "env": "DEV"
+      },
+      {
+        "db_url" : "10.213.234.42/hntcdb",
+        "db_username": "HNTC_UAT",
+        "db_password": "HNTC_UAT",
+        "env": "UAT"
+      },
+      {
+        "db_url" : "10.213.234.153/prod",
+        "db_username": "HNTC_PROD",
+        "db_password": "HNTC_PROD",
+        "env": "PROD"
+      }
+    ]
+  }
+
+]
