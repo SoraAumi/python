@@ -1,7 +1,0 @@
-sys_load_hls_doc_layout_pkg.export_button('ARCHIVE002','N',null,1);
-sys_load_hls_doc_layout_pkg.export_button('ARCHIVE003','N',null,1);
-sys_load_hls_doc_layout_pkg.export_button('ARCHIVE002_C','N',null,1);
-sys_load_hls_doc_layout_pkg.export_button('ARCHIVE002_R','N',null,1);
-sys_load_hls_doc_layout_pkg.export_button('ARCHIVE003_B','N',null,1);
-sys_load_hls_doc_layout_pkg.export_button('ARCHIVE003_D','N',null,1);
-sys_load_hls_doc_layout_pkg.export_button('ARCHIVE002_MW','N',null,1);

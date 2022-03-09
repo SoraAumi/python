@@ -1,6 +1,6 @@
 # 导出系统编码
-from file.file_util import creat_file, delete_dir, read_file
-from oracle.OracleTest import db_init
+from file.file_util import create_file, delete_dir, read_file
+from oracle.oracle_init import db_init
 
 code_sql_str = '''
                 sys_code_pkg.insert_sys_code('{code}','{code_name}','{code_name}','{code_name}','ZHS','');
@@ -37,7 +37,8 @@ def get_sys_codes_script(in_code):
         code_value_sql_str += code_value_sql.format(code=code, code_value=code_value, code_value_name=code_value_name) \
                               + '\r\n'
 
-    sql_str += code_sql_str.format(code=code, code_name=code_name) + code_value_sql_str + "commit;\r\nend;"
+    sql_str += code_sql_str.format(code=code, code_name=code_name) + code_value_sql_str + "commit;\r\nexception when " \
+                                                                                          "others then null; end; "
     return sql_str
 
 
@@ -45,7 +46,7 @@ def export_sys_codes(codes):
     delete_dir()
     for code in codes:
         sql_str = get_sys_codes_script(code)
-        creat_file('../sql/auto_script_generator/scripts/' + "系统代码" + code + '.sql', sql_str)
+        create_file('../sql/auto_script_generator/scripts/' + "系统代码" + code + '.sql', sql_str)
 
 
 def batch_export_sys_codes(path):
@@ -54,4 +55,4 @@ def batch_export_sys_codes(path):
 
 
 if __name__ == '__main__':
-    export_sys_codes(["PRJ_PROJECT_TYPE"])
+    batch_export_sys_codes("./batch_sys_codes_export.txt")

@@ -51,7 +51,7 @@ def get_text_sql():
 
 
 def get_db_info(project, env):
-    file = open("../sql/db_setting.json", "rb")
+    file = open("../jsons/db_setting.json", "rb")
     file_json = json.load(file)
     for project_list in file_json:
         if project == project_list["project"]:

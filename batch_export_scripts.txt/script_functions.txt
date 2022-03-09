@@ -1,0 +1,1 @@
+sys_load_hls_doc_layout_pkg.export_all('BP_NP_CREATE','N',null,1);

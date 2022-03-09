@@ -25,5 +25,5 @@ def copy_project_file(project_path, copy_file_path):
 
 if __name__ == '__main__':
     # clean_file_dir("file_script_data/copy_project_file/")
-    copy_project_file("D:/WorkSpace/Project/leaf-hntc/",
+    copy_project_file("D:/WorkSpace/Project/hnyw_dev/leaf-hntc/",
                       'file_script_data/copy_project_file')
