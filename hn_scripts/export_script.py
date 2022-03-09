@@ -15,7 +15,7 @@ coloredlogs.install(level='DEBUG')
 def batch_export_script(export_path="../export/hn/scripts"):
     conn, cursor = db_init("HN", "DEV")
     delete_dir(export_path)
-    with open("../batch_export_scripts.txt/script_functions.txt", encoding='utf-8') as sf:
+    with open("../hn_scripts/batch_export_scripts.txt", encoding='utf-8') as sf:
         for function in sf:
             if function != '':
                 script_str = ""
