@@ -5,6 +5,7 @@ import logging
 import cx_Oracle
 import tkinter.messagebox
 
+
 def get_table_column(cursor, table_name):
     sql = "SELECT a.column_name FROM user_tab_columns a WHERE a.TABLE_NAME = '{}'" \
         .format(str.upper(table_name))
@@ -42,7 +43,7 @@ def trans_json(result, columns):
 
 
 def get_text_sql():
-    with open("sql/oracle_sql.txt", encoding='utf-8') as f:
+    with open("../sql/oracle_sql.txt", encoding='utf-8') as f:
         sql_str = ''
         for line in f:
             sql_str += line.strip() + '\r\n'
@@ -50,7 +51,7 @@ def get_text_sql():
 
 
 def get_db_info(project, env):
-    file = open("sql/db_setting.json", "rb")
+    file = open("../sql/db_setting.json", "rb")
     file_json = json.load(file)
     for project_list in file_json:
         if project == project_list["project"]:

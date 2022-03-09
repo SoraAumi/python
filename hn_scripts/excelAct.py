@@ -8,7 +8,8 @@ import chardet as chardet
 import xlrd
 import shutil
 
-from OracleTest import db_init
+from file.file_util import creat_file, delete_dir
+from oracle.OracleTest import db_init
 
 
 # 获取xls文档行列
@@ -53,15 +54,15 @@ def get_query_data(sheet_data):
 # 批量获取脚本
 def auto_script_generator():
     conn, cursor = db_init("HN", "DEV")
-    delete_file()
-    with open("sql/auto_script_generator/script_functions.txt", encoding='utf-8') as sf:
+    delete_dir()
+    with open("../sql/auto_script_generator/script_functions.txt", encoding='utf-8') as sf:
         for function in sf:
             if function != '':
                 script_str = ""
 
                 file_name = get_hn_script_file_name(function)
 
-                with open("sql/auto_script_generator/set_lines.sql", encoding='utf-8') as f:
+                with open("../sql/auto_script_generator/set_lines.sql", encoding='utf-8') as f:
                     sql_str = ''
                     for line in f:
                         sql_str += (line.strip() + '\r\n').format(script_function=function)
@@ -74,7 +75,8 @@ def auto_script_generator():
                     if line[0] is not None:
                         script_str += str(line[0]) + '\r\n'
 
-                creat_file(file_name, script_str)
+                file_path = '../sql/auto_script_generator/scripts/' + file_name + '.sql'
+                creat_file(file_path, script_str)
                 logging.info(file_name + "已生成")
     cursor.close()
     conn.close()
@@ -82,28 +84,14 @@ def auto_script_generator():
 
 # 获取处理后的文件名
 def get_hn_script_file_name(function):
-    file = open("jsons/hn_script_detail.json", "rb")
+    file = open("../jsons/hn_script_detail.json", "rb")
     file_json = json.load(file)
     for rec in file_json:
         if rec["script"] in function:
             return rec["name"] + "-" + function.split("'")[1].replace('/', '.')
 
 
-# 创建文件写文件
-def creat_file(file_name, file_content):
-    file_path = 'sql/auto_script_generator/scripts/' + file_name + '.sql'
-    f = open(file_path, 'w+', encoding='utf-8')
-    f.write(file_content)
 
-
-# 清空脚本文件夹
-def delete_file():
-    filepath = './sql/auto_script_generator/scripts/'
-    if not os.path.exists(filepath):
-        os.mkdir(filepath)
-    else:
-        shutil.rmtree(filepath)
-        os.mkdir(filepath)
 
 
 # 获取文件夹下的所有文件名
@@ -159,11 +147,7 @@ def standardized_file_encode(path):
         file.write(line)
 
 
-# 导出系统编码
-def export_sys_codes(in_code):
-    conn, cursor = db_init("HN", "DEV")
-    cursor.execute("select s.code, (select description_text from fnd_descriptions where description_id = s.code_name_id and language = 'ZHS') code_name from sys_codes s where code = {code}".format(code=in_code))
-    return cursor.fetchone()
+
 
 
 if __name__ == '__main__':
@@ -172,4 +156,3 @@ if __name__ == '__main__':
     # auto_script_generator()
     # batch_execute_sql(project="HN", env="UAT")
 
-    print(export_sys_codes("PRJ_PROJECT_TYPE"))

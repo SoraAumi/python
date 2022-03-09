@@ -1,6 +1,6 @@
 with open("ddd.txt", encoding='utf-8') as f:
-    stsr = '('
+    stsr = ''
     for line in f:
-        stsr += "'" + line.strip() + "',"
-    stsr += ')'
+        if 'Index' in line:
+            stsr += line.replace('Index: ', '')
     print(stsr)
