@@ -7,7 +7,7 @@ import tkinter.messagebox
 
 
 def get_table_column(cursor, table_name):
-    sql = "SELECT a.column_name FROM user_tab_columns a WHERE a.TABLE_NAME = '{}'" \
+    sql = "SELECT a.column_name, a.data_type FROM user_tab_columns a WHERE a.TABLE_NAME = '{}' order by COLUMN_ID" \
         .format(str.upper(table_name))
     cursor.execute(sql)
     return get_sql_result(cursor, 0)

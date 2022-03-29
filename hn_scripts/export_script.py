@@ -9,11 +9,12 @@ from oracle.oracle_init import db_init
 
 logger = logging.getLogger('file_module')
 coloredlogs.install(level='DEBUG')
+coloredlogs.DEFAULT_FIELD_STYLES = {'levelname': {'color': 'white', 'bold': True}}
 
 
 # 批量获取脚本
-def batch_export_script(export_path="../export/hn/scripts"):
-    conn, cursor = db_init("HN", "DEV")
+def batch_export_script(project="HN", env="DEV", export_path="../export/hn/scripts"):
+    conn, cursor = db_init(project, env)
     delete_dir(export_path)
     with open("../hn_scripts/batch_export_scripts.txt", encoding='utf-8') as sf:
         for function in sf:
@@ -32,10 +33,10 @@ def batch_export_script(export_path="../export/hn/scripts"):
 
                 for line in cursor:
                     if line[0] is not None:
-                        script_str += str(line[0])
+                        script_str += str(line[0]) + '\r\n'
 
                 file_path = export_path + '/' + file_name + '.sql'
-                create_file_auto(file_path, script_str)
+                create_file_auto(file_path, f'begin\n{script_str}\ncommit;\nend;')
     cursor.close()
     conn.close()
 
@@ -76,7 +77,7 @@ def get_file_str(file_path):
 
 
 # 批量执行SQL文件
-def batch_execute_sql(file_dir="..\\sql\\auto_script_generator\\scripts", project="HN", env="DEV"):
+def batch_execute_sql(file_dir="..\\export\\hn\\scripts", project="HN", env="DEV"):
     conn, cursor = db_init(project, env)
     file_counts = len(glob.glob(pathname=file_dir + "\\*.*"))
     for idx, file_path in enumerate(get_dir_file_path(file_dir)):
@@ -103,5 +104,5 @@ def standardized_file_encode(path):
 
 
 if __name__ == '__main__':
-    batch_export_script()
-    # batch_execute_sql(project="HN", env="UAT")
+    # batch_export_script(project="HN", env="DEV")
+    batch_execute_sql(project="HN", env="UAT")

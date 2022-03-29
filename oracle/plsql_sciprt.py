@@ -38,4 +38,5 @@ def export_sql(item_name, export_path='../export/oracle/plsql_script_export',
 
 
 if __name__ == '__main__':
-    export_sql(item_name="ARCHIVE_INFO_ENTRANCE_LV", item_type="view", env="UAT")
+    for pck in ['bgfl_special_parameter_pkg']:
+        export_sql(item_name='CON_FILE_ARCHIVE_DETAIL_LV', env="DEV", item_type="view")

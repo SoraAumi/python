@@ -43,4 +43,12 @@ def get_query_data(sheet_data):
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
+    excel_list, excel_column = get_query_data(get_excel_row_col("./excels/da.xlsx", "档案"))
+    for rec in excel_list:
+        c = "'" + rec["centralized_light_power_flag"] + "'"
+        b = "'" + rec["binary_classification_code"] + "'"
+        s = "'" + rec["second_classification_name"] + "'"
+        print(f'update hn_second_classification set centralized_light_power_flag={c}'
+              f' where binary_classification_code={b} '
+              f'and second_classification_name={s};')
 

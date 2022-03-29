@@ -1,8 +1,0 @@
-declare
-    v_clob clob;
-begin
-    v_clob := '{para_sql_content}';
-    update hls_doc_file_templet_para set sql_content = v_clob
-        where bookmark = '{para_bookmark}';
-    commit;
-end;

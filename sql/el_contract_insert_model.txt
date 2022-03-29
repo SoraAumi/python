@@ -1,3 +1,0 @@
-begin
-    insert into {table_name}({column_str}) values({value_str});
-end;

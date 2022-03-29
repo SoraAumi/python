@@ -1,5 +1,5 @@
 # 导出系统编码
-from file.file_util import create_file, delete_dir, read_file
+from file.file_util import create_file, delete_dir, read_file, create_file_auto
 from oracle.oracle_init import db_init
 
 code_sql_str = '''
@@ -25,12 +25,12 @@ def get_sys_codes_script(in_code):
                        code=in_code))
     code, code_name = cursor.fetchone()
 
-    cursor.execute('''select v.code_value,
+    cursor.execute(f'''select v.code_value,
                    (select description_text from fnd_descriptions where description_id = 
                    code_value_name_id and language = 'ZHS') code_value_name
                    from sys_codes s, sys_code_values v 
                    where s.code_id = v.code_id
-                   and s.code = 'PRJ_PROJECT_TYPE'
+                   and s.code = '{in_code}'
                    and v.enabled_flag = 'Y' ''')
     for rec in cursor:
         code_value, code_value_name = rec
@@ -43,10 +43,10 @@ def get_sys_codes_script(in_code):
 
 
 def export_sys_codes(codes):
-    delete_dir()
+    delete_dir("..\\export\\hn\\scripts\\")
     for code in codes:
         sql_str = get_sys_codes_script(code)
-        create_file('../sql/auto_script_generator/scripts/' + "系统代码" + code + '.sql', sql_str)
+        create_file_auto('..\\export\\hn\\scripts\\' + "系统代码" + code + '.sql', sql_str)
 
 
 def batch_export_sys_codes(path):

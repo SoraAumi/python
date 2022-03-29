@@ -2,6 +2,8 @@
 import logging
 import coloredlogs
 
+import emoji
+
 logger = logging.getLogger('file_module')
 coloredlogs.install(level='DEBUG')
 
@@ -11,3 +13,7 @@ logger.info("this is an informational message")
 logger.warning("this is a warning message")
 logger.error("this is an error message")
 logger.critical("this is a critical message")
+
+
+for k, v in emoji.EMOJI_UNICODE.items():
+    print(v, end=' ')

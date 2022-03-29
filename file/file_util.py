@@ -24,10 +24,15 @@ def create_file(file_path, file_content):
 # 创建文件(没有路径自动生成)
 def create_file_auto(file_path, file_content):
     (fp, temp_filename) = os.path.split(file_path)
-    if not os.path.exists(fp):
-        os.makedirs(fp)
-        logger.warning(f"🏵️ 路径不存在，已经自动创建路径{fp}啦")
+    check_path_exist(fp)
     create_file(file_path, file_content)
+
+
+# 检验路径是否存在 不存在自动生成
+def check_path_exist(file_path):
+    if not os.path.exists(file_path):
+        os.makedirs(file_path)
+        logger.warning(f"🏵️ 路径不存在，已经自动创建路径{file_path}啦")
 
 
 # 清空文件夹

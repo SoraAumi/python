@@ -1,6 +1,6 @@
 with open("ddd.txt", encoding='utf-8') as f:
-    stsr = ''
+    path_str = ''
     for line in f:
         if 'Index' in line:
-            stsr += line.replace('Index: ', '')
-    print(stsr)
+            path_str += line.replace('Index: ', '')
+    print(path_str)
