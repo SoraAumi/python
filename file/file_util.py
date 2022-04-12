@@ -61,6 +61,21 @@ def read_file(file_path, encoding='utf-8', return_type='str'):
             return file_list
 
 
+# 获取文件夹下的所有文件名
+def get_dir_file_path(file_dir):
+    file_list = []
+    for root, dirs, files in os.walk(file_dir):
+        # 当前目录路径
+        # print(root)
+        # 当前路径下所有子目录
+        # print(dirs)
+        # 当前路径下所有非目录子文件
+        for file in files:
+            file_list.append(file_dir + "\\" + file)
+
+    return file_list
+
+
 # 清空文件夹 以及子目录
 def clean_file_dir(path):
     static_files = ['FilePaths.txt', 'FileUpdate.py', 'FileUpdate.exe']

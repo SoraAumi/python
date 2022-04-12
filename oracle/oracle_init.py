@@ -2,6 +2,9 @@ import json
 import datetime
 import logging
 
+import xlrd, xlwt
+from faker import Faker
+
 import cx_Oracle
 import tkinter.messagebox
 
@@ -11,6 +14,21 @@ def get_table_column(cursor, table_name):
         .format(str.upper(table_name))
     cursor.execute(sql)
     return get_sql_result(cursor, 0)
+
+
+def export_data_to_excel(cursor, file_path='../hn_scripts/excels'):
+    data = cursor.fetchall()
+    title = [i[0] for i in cursor.description]
+    faker = Faker(locale='zh_CN')
+    xls_path = file_path + faker.file_path(depth=0, extension='xlsx')
+    workbook = xlwt.Workbook(encoding='utf-8')
+    worksheet = workbook.add_sheet('sql_query_sheet')
+    for idx, column in enumerate(title):
+        worksheet.write(0, idx, column)
+    for row, record in enumerate(data):
+        for line, column_data in enumerate(list(record)):
+            worksheet.write(row + 1, line, column_data)
+    workbook.save(xls_path)
 
 
 def get_sql_result(cursor, row_number=-1):
@@ -72,22 +90,25 @@ def db_init(project, env):
 
 
 def main():
-    u, p, l = get_db_info()
+    u, p, l = get_db_info("HN", "DEV")
     conn = cx_Oracle.connect(u, p, l)
     cursor = conn.cursor()
-    output = cursor.callproc('sys_load_hls_doc_layout_pkg.export_all', ['FILE_ARCHIVE', 'N', None, -1])
-    print(output)
+    cursor.execute("select * from prj_project where project_id = 12159")
+    data = cursor.fetchall()
+    title = [i[0] for i in cursor.description]
 
+    print(title)
+    print(data)
     cursor.close()
     conn.close()
 
 
 if __name__ == '__main__':
-    try:
-        main()
-        tkinter.messagebox.showinfo('提示', '执行成功')
-    except Exception as e:
-        print(e)
-        tkinter.messagebox.showerror('提示', e)
-
-
+    fake = Faker(locale='zh_CN')
+    print(fake.file_path(depth=0, extension='xls'))
+    # try:
+    #     main()
+    #     tkinter.messagebox.showinfo('提示', '执行成功')
+    # except Exception as e:
+    #     print(e)
+    #     tkinter.messagebox.showerror('提示', e)

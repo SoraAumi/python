@@ -19,12 +19,6 @@
         "db_username": "HN_PROD",
         "db_password": "Hntc919",
         "env": "PROD"
-      },
-      {
-        "db_url" : "10.213.234.42/hntcdb",
-        "db_username": "HNTC_PRE",
-        "db_password": "HNTC_PRE",
-        "env": "PRE"
       }
     ]
   }

@@ -31,7 +31,7 @@ def get_sys_codes_script(in_code):
                    from sys_codes s, sys_code_values v 
                    where s.code_id = v.code_id
                    and s.code = '{in_code}'
-                   and v.enabled_flag = 'Y' ''')
+                  ''')
     for rec in cursor:
         code_value, code_value_name = rec
         code_value_sql_str += code_value_sql.format(code=code, code_value=code_value, code_value_name=code_value_name) \

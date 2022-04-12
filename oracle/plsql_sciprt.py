@@ -1,5 +1,5 @@
 from oracle.oracle_init import db_init
-from file.file_util import create_file_auto
+from file.file_util import create_file_auto, delete_dir
 
 
 # 导出plsql内容 type可为package body, package, view
@@ -38,5 +38,6 @@ def export_sql(item_name, export_path='../export/oracle/plsql_script_export',
 
 
 if __name__ == '__main__':
-    for pck in ['bgfl_special_parameter_pkg']:
-        export_sql(item_name='CON_FILE_ARCHIVE_DETAIL_LV', env="DEV", item_type="view")
+    delete_dir('../export/oracle/plsql_script_export/')
+    for pck in ['archive_info_entrance_lv','con_file_archive_detail_lv','con_file_archive_detail_wfl_lv','con_file_archive_file_lv','file_archive_batch_manual_lv']:
+        export_sql(item_name=pck, env="DEV", item_type="view")

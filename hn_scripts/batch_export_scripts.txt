@@ -1,1 +1,7 @@
-sys_load_hls_doc_layout_pkg.export_button('ARCHIVE002_D','N',null,1);
+sys_load_hls_doc_layout_pkg.export_all('WFL_MANUAL_FILE_ARCHIVE','N',null,-1);
+sys_load_hls_doc_layout_pkg.export_all('WLF_AUTO_FILE_ARCHIVE','N',null,-1);
+sys_load_hls_doc_layout_pkg.export_all('ARCHIVE_FILE_HIS_ENTRANCE','N',null,-1);
+sys_load_hls_doc_layout_pkg.export_all('FILE_ARCHIVE_DETAIL','N',null,-1);
+sys_load_hls_doc_layout_pkg.export_all('FILE_ARCHIVE','N',null,-1);
+sys_load_hls_doc_layout_pkg.export_all('ARCHIVE_FILE_HIS_BATCH','N',null,-1);
+sys_load_hls_doc_layout_pkg.export_all('FILE_ARCHIVE_CREATE','N',null,-1);

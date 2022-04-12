@@ -66,13 +66,11 @@ def get_dir_file_path(file_dir):
 
 
 # 获取文件中的文本集 并加入commit 提交
-def get_file_str(file_path):
-    with open(file_path, encoding='utf-8') as f:
+def get_file_str(file_path, encoding='utf-8'):
+    with open(file_path, encoding=encoding) as f:
         sql_str = ''
         for line in f:
-            if "END" in str.upper(line):
-                line = "commit;" + line
-            sql_str += line.strip() + '\r\n'
+            sql_str += line
         return sql_str
 
 
@@ -81,7 +79,7 @@ def batch_execute_sql(file_dir="..\\export\\hn\\scripts", project="HN", env="DEV
     conn, cursor = db_init(project, env)
     file_counts = len(glob.glob(pathname=file_dir + "\\*.*"))
     for idx, file_path in enumerate(get_dir_file_path(file_dir)):
-        # standardized_file_encode(file_path)
+        standardized_file_encode(file_path)
         try:
             cursor.execute(get_file_str(file_path))
         except Exception as e:
@@ -104,5 +102,7 @@ def standardized_file_encode(path):
 
 
 if __name__ == '__main__':
-    # batch_export_script(project="HN", env="DEV")
+    edit_path = '''C:\\Users\\Master Yi\\Desktop\\档案归档发版\\sql\\视图'''
+
+    batch_export_script(project="HN", env="DEV")
     batch_execute_sql(project="HN", env="UAT")
