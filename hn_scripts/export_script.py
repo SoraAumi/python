@@ -96,13 +96,13 @@ def standardized_file_encode(path):
     # gb2312编码的，同一个用gbk编码解析
     if res["encoding"] == "GB2312":
         res["encoding"] = "GBK"
-    with open(os.path.join(path), "w", encoding="utf-8") as file:
-        line = str(data, encoding=res["encoding"])
-        file.write(line)
+        with open(os.path.join(path), "w", encoding="utf-8") as file:
+            line = str(data, encoding=res["encoding"])
+            file.write(line)
 
 
 if __name__ == '__main__':
     edit_path = '''C:\\Users\\Master Yi\\Desktop\\档案归档发版\\sql\\视图'''
 
     batch_export_script(project="HN", env="DEV")
-    batch_execute_sql(project="HN", env="UAT")
+    # batch_execute_sql(project="HN", env="UAT")
