@@ -15,9 +15,6 @@ wechat_server_url = 'http://sctapi.ftqq.com/{sendKey}.send'
 Sora_send_key = '''SCT79558TBhJsgrVByfymoolYzF6ydp9Q'''
 
 
-
-
-
 def get_request(url):
     response = requests.get(url, verify=False)
     return json.loads(response.text)
@@ -28,12 +25,20 @@ def send_wechat_msg(send_key, data):
     return response.text
 
 
+def hn_project_req():
+    try:
+        tqdm.tqdm.write("开始检索")
+        for item in tqdm.tqdm(read_file('./letters.txt', 'utf-8', 'list')):
+            res = get_request(req_url.format(project_id=item))
+            if res['message'] != '':
+                tqdm.tqdm.write(f"项目:{item} 返回信息为:{res}")
+    except Exception as e:
+        print(e)
+    finally:
+        x = input("Press Enter to exit")
+
+
 if __name__ == '__main__':
     coloredlogs.install(level='INFO')
     urllib3.disable_warnings()
-    for item in tqdm.tqdm(read_file('./letters.txt', 'utf-8', 'list')):
-        res = get_request(req_url.format(project_id=item))
-        if res['message'] != '':
-            tqdm.tqdm.write(f"项目:{item} 返回信息为:{res}")
-    x = input("Press Any key to exit")
-
+    hn_project_req()

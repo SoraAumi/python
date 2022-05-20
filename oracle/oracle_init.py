@@ -1,50 +1,8 @@
 import json
-import datetime
 import logging
 
-import xlrd, xlwt
-from faker import Faker
-
+from jsons.pretty_print import pretty_print
 import cx_Oracle
-import tkinter.messagebox
-
-
-def get_table_column(cursor, table_name):
-    sql = "SELECT a.column_name, a.data_type FROM user_tab_columns a WHERE a.TABLE_NAME = '{}' order by COLUMN_ID" \
-        .format(str.upper(table_name))
-    cursor.execute(sql)
-    return get_sql_result(cursor, 0)
-
-
-def export_data_to_excel(cursor, file_path='../hn_scripts/excels'):
-    data = cursor.fetchall()
-    title = [i[0] for i in cursor.description]
-    faker = Faker(locale='zh_CN')
-    xls_path = file_path + faker.file_path(depth=0, extension='xlsx')
-    workbook = xlwt.Workbook(encoding='utf-8')
-    worksheet = workbook.add_sheet('sql_query_sheet')
-    for idx, column in enumerate(title):
-        worksheet.write(0, idx, column)
-    for row, record in enumerate(data):
-        for line, column_data in enumerate(list(record)):
-            worksheet.write(row + 1, line, column_data)
-    workbook.save(xls_path)
-
-
-def get_sql_result(cursor, row_number=-1):
-    results = []
-    while 1:
-        row = cursor.fetchone()
-        if row is None:
-            break
-        row_list = []
-        for data in row:
-            if type(data) is datetime.datetime:
-                row_list.append(data.strftime('%Y-%b-%d'))
-            else:
-                row_list.append(data)
-        results.append(row_list)
-    return results
 
 
 def trans_json(result, columns):
@@ -58,14 +16,6 @@ def trans_json(result, columns):
                 data_record[str(columns[i][0])] = record[i]
             data_list.append(data_record)
     return data_list
-
-
-def get_text_sql():
-    with open("../sql/oracle_sql.txt", encoding='utf-8') as f:
-        sql_str = ''
-        for line in f:
-            sql_str += line.strip() + '\r\n'
-        return sql_str
 
 
 def get_db_info(project, env):
@@ -89,26 +39,64 @@ def db_init(project, env):
         exit(0)
 
 
-def main():
-    u, p, l = get_db_info("HN", "DEV")
-    conn = cx_Oracle.connect(u, p, l)
-    cursor = conn.cursor()
-    cursor.execute("select * from prj_project where project_id = 12159")
-    data = cursor.fetchall()
-    title = [i[0] for i in cursor.description]
+def exec_sql_ultra(cursor, sql):
+    try:
+        cursor.execute(sql)
+        result = cursor.fetchall()
+        res = []
+        column_property = []
+        for i in result:
+            list_list = list(i)
+            des = cursor.description  # 获取表详情，字段名，长度，属性等
+            dict_result = dict(zip([item[0] for item in des], list_list))  # 打包为元组的列表 再转换为字典
+            column_property = dict(zip([item[0] for item in des], [item[1] for item in des]))
+            res.append(dict_result)
+        if len(res) > 0:
+            return res, column_property
+        else:
+            logging.warning(f"未查询到数据，查询SQL为 {sql}")
+    except Exception as e:
+        logging.error(f"发生错误{e}，错误SQL为:\n{sql}")
 
-    print(title)
-    print(data)
-    cursor.close()
-    conn.close()
+
+def get_sp_sql(desc, project="currency"):
+    file = open("../jsons/db_sql.json", "rb")
+    file_json = json.load(file)
+    for project_list in file_json:
+        if project == project_list["project"]:
+            for data in project_list["data"]:
+                if data["description"] == desc:
+                    return data["sql"], data["para"]
+
+
+def format_split(para, para_value):
+    split_str = ""
+    if len(para) != len(para_value):
+        logging.error('参数个数不匹配')
+
+    elif len(para) == 0 or len(para_value) == 0:
+        logging.error('参数个数不能为0')
+    else:
+        for i in range(len(para)):
+            split_str += f"{para[i]}='{para_value[i]}', "
+
+        return f".format({split_str[:-2]})"
+
+
+def execute_model_sql(project, env, model_desc, model_paras):
+    conn, cursor = db_init(project, env)
+    sql, para = get_sp_sql(model_desc, project)
+    return exec_sql_ultra(cursor, eval(f''' "{sql}" ''' + format_split(para, model_paras)))
+
+
+def get_table_pk(cursor, table_name):
+    res = execute_model_sql(cursor, model_desc="get_table_pk", model_paras=[table_name])
+    return res[0][0]['COLUMN_NAME']
+
+
+def main():
+    pretty_print(execute_model_sql("HN", "DEV", "get_instance_info", ["57038"])[0])
 
 
 if __name__ == '__main__':
-    fake = Faker(locale='zh_CN')
-    print(fake.file_path(depth=0, extension='xls'))
-    # try:
-    #     main()
-    #     tkinter.messagebox.showinfo('提示', '执行成功')
-    # except Exception as e:
-    #     print(e)
-    #     tkinter.messagebox.showerror('提示', e)
+    main()

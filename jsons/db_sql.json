@@ -1,0 +1,22 @@
+[
+  {
+    "project": "currency",
+    "data": [
+      {
+        "description": "get_table_pk",
+        "sql": "SELECT distinct column_name FROM all_cons_columns WHERE constraint_name in (SELECT constraint_name FROM all_constraints  WHERE UPPER(table_name) = UPPER('{table_name}') AND CONSTRAINT_TYPE = 'P')",
+        "para": ["table_name"]
+      }
+    ]
+  },
+  {
+    "project": "HN",
+    "data": [
+      {
+        "description": "get_instance_info",
+        "sql": "select * from zj_wfl_instance_para_all_v v  where v.instance_id =  {instance_id}",
+        "para": ["instance_id"]
+      }
+    ]
+  }
+]
