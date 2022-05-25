@@ -110,8 +110,7 @@ class OracleDBExport:
         return execute_sql
 
     def export_db_data_file(self, sql, table_name, file_path='../export/script/'):
-        fu = FileUtil(f"{file_path}表{table_name}数据插入.sql", self.export_db_data(sql, table_name))
-        fu.create_file_auto()
+        FileUtil(f"{file_path}表{table_name}数据插入.sql", self.export_db_data(sql, table_name)).create_file_auto()
 
 
 if __name__ == '__main__':

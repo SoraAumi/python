@@ -27,9 +27,8 @@ def batch_layout_tab_export(project, env, export_list='./batch_export_layout_tab
     FileUtil.delete_dir(export_file_path)
     for layout in layout_list:
         [layout_code, tab_code] = layout.split(reg)
-        fu = FileUtil(f"{export_file_path}页面布局-{layout_code}-{tab_code}.sql",
-                      layout_ds_table_export(project, env, layout_code, tab_code))
-        fu.create_file_auto()
+        FileUtil(f"{export_file_path}页面布局-{layout_code}-{tab_code}.sql",
+                 layout_ds_table_export(project, env, layout_code, tab_code)).create_file_auto()
 
 
 if __name__ == '__main__':

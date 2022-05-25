@@ -37,8 +37,7 @@ def batch_export_script(project="HN", env="DEV", export_path="../export/hn/scrip
                         script_str += str(line[0]) + '\r\n'
 
                 file_path = export_path + '/' + file_name + '.sql'
-                ft.set_file_property(file_path, f'begin\n{script_str}\ncommit;\nend;')
-                ft.create_file_auto()
+                FileUtil(file_path, f'begin\n{script_str}\ncommit;\nend;').create_file_auto()
     cursor.close()
     conn.close()
 

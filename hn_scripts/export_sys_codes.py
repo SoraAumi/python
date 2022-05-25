@@ -44,11 +44,9 @@ def get_sys_codes_script(in_code):
 
 def export_sys_codes(codes):
     FileUtil.delete_dir("..\\export\\hn\\scripts\\")
-    fu = FileUtil()
     for code in codes:
         sql_str = get_sys_codes_script(code)
-        fu.set_file_property('..\\export\\hn\\scripts\\' + "系统代码" + code + '.sql', sql_str)
-        fu.create_file_auto()
+        FileUtil('..\\export\\hn\\scripts\\' + "系统代码" + code + '.sql', sql_str).create_file_auto()
 
 
 def batch_export_sys_codes(path):

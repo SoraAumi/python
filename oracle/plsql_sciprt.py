@@ -1,5 +1,5 @@
 from oracle.oracle_init import db_init
-from file.file_util import create_file_auto, delete_dir
+from file.file_util import FileUtil
 
 
 # 导出plsql内容 type可为package body, package, view
@@ -25,7 +25,7 @@ def export_pck(item_name, export_path='../export/oracle/plsql_script_export', pr
                                        project=project, env=env) + '\r\n'
 
     file_path = f"{export_path}/package-{str.upper(item_name)}.pck"
-    create_file_auto(file_path, export_str)
+    FileUtil(file_path, export_str).create_file_auto()
 
 
 # 导出sql文件 用于view视图, table架构
@@ -34,10 +34,11 @@ def export_sql(item_name, export_path='../export/oracle/plsql_script_export',
     export_str = export_plsql_item_str(item_name=item_name, item_type=item_type, project=project, env=env)
 
     file_path = f"{export_path}/{item_type}-{str.upper(item_name)}.sql"
-    create_file_auto(file_path, export_str)
+    FileUtil(file_path, export_str).create_file_auto()
 
 
 if __name__ == '__main__':
-    delete_dir('../export/oracle/plsql_script_export/')
-    for pck in ['archive_info_entrance_lv','con_file_archive_detail_lv','con_file_archive_detail_wfl_lv','con_file_archive_file_lv','file_archive_batch_manual_lv']:
+    FileUtil.delete_dir('../export/oracle/plsql_script_export/')
+    for pck in ['archive_info_entrance_lv', 'con_file_archive_detail_lv', 'con_file_archive_detail_wfl_lv',
+                'con_file_archive_file_lv', 'file_archive_batch_manual_lv']:
         export_sql(item_name=pck, env="DEV", item_type="view")

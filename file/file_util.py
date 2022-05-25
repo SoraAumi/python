@@ -33,13 +33,13 @@ class FileUtil:
         (fp, temp_filename) = os.path.split(self.target_path)
 
         if os.path.exists(self.target_path):
-            logger.warning(f"🌸 文件{temp_filename}已经存在 将会被覆盖啦")
+            logger.warning(f"🌸文件{temp_filename}已经存在 将会被覆盖啦")
 
         f = open(self.target_path, 'w+', encoding='utf-8')
         f.write(self.target_content)
         f.close()
 
-        logger.info(f"🍀 文件 {self.file_name} 已经生成 路径为 {self.fp}")
+        logger.info(f"🍀文件 {self.file_name} 已经生成 路径为 {self.fp}")
 
     # 检验路径是否存在 不存在自动生成
     def check_path_exist(self, dirs=None):
