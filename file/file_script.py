@@ -1,7 +1,7 @@
 import os
 import shutil
 
-from file.file_util import check_path_exist, clean_file_dir
+from file.file_util import FileUtil
 
 
 # 工程文件复制(不刷新文件夹)
@@ -9,7 +9,9 @@ def copy_project_file(project_path, copy_file_path="../export/file/file_script")
     # 读取文件中的路径
     fo = open("./file_script_data/copy_project_file.txt", "r")
 
-    check_path_exist(copy_file_path)
+    fu = FileUtil(copy_file_path)
+
+    fu.check_path_exist(copy_file_path)
 
     for line in fo:
         line = line.strip()
@@ -27,10 +29,10 @@ def copy_project_file(project_path, copy_file_path="../export/file/file_script")
 
 # 工程文件复制(刷新文件夹)
 def refresh_project_file(project_path, copy_file_path="../export/file/file_script"):
-    # clean_file_dir(copy_file_path)
+    FileUtil.delete_dir(copy_file_path)
     copy_project_file(project_path=project_path, copy_file_path=copy_file_path)
 
 
 if __name__ == '__main__':
-    refresh_project_file(project_path="D:/WorkSpace/Project/leaf-hntc/",
+    refresh_project_file(project_path="D:\\workspace\\work_project\\leaf-hntc\\",
                          copy_file_path='file_script_data/copy_project_file')

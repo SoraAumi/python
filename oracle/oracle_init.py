@@ -1,8 +1,7 @@
 import json
 import logging
-
-from jsons.pretty_print import pretty_print
 import cx_Oracle
+from jsons.pretty_print import pretty_print
 
 
 def trans_json(result, columns):
@@ -75,7 +74,7 @@ def format_split(para, para_value):
         logging.error('参数个数不匹配')
 
     elif len(para) == 0 or len(para_value) == 0:
-        logging.error('参数个数不能为0')
+        return ''
     else:
         for i in range(len(para)):
             split_str += f"{para[i]}='{para_value[i]}', "
@@ -83,10 +82,9 @@ def format_split(para, para_value):
         return f".format({split_str[:-2]})"
 
 
-def execute_model_sql(project, env, model_desc, model_paras):
-    conn, cursor = db_init(project, env)
-    sql, para = get_sp_sql(model_desc, project)
-    return exec_sql_ultra(cursor, eval(f''' "{sql}" ''' + format_split(para, model_paras)))
+def execute_model_sql(cursor, model_desc, model_paras, sql_type='currency'):
+    sql, para = get_sp_sql(model_desc, sql_type)
+    return exec_sql_ultra(cursor, eval(f''' "{sql}" ''' + format_split(para, model_paras)))[0]
 
 
 def get_table_pk(cursor, table_name):
@@ -95,7 +93,22 @@ def get_table_pk(cursor, table_name):
 
 
 def main():
-    pretty_print(execute_model_sql("HN", "DEV", "get_instance_info", ["57038"])[0])
+    conn, cursor = db_init('HN', 'DEV')
+    # 获取工作流参数
+    pretty_print(execute_model_sql(cursor=cursor, sql_type="HN",
+                                   model_desc="get_instance_info", model_paras=["52559"]))
+    #
+    # # 获取表列描述信息
+    # pretty_print(execute_model_sql(cursor=cursor, sql_type="currency",
+    #                                model_desc="get_column_description", model_paras=["hls_bp_master", "bp_name"]))
+    #
+    # # 获取错误日志
+    # pretty_print(execute_model_sql(cursor=cursor, sql_type="HN",
+    #                                model_desc="get_error_log", model_paras=[]))
+    #
+    # # 获取工作流日志
+    # pretty_print(execute_model_sql(cursor=cursor, sql_type="HN",
+    #                                model_desc="get_instance_log", model_paras=["57038"]))
 
 
 if __name__ == '__main__':

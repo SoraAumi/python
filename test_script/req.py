@@ -1,4 +1,5 @@
 import json
+import os
 import time
 
 import coloredlogs
@@ -6,7 +7,6 @@ import tqdm
 import requests
 import urllib3
 
-from file.file_util import read_file
 
 req_url = 'https://business.huanengleasing.cn/modules/wfl_screen/PRJ_PROJECT/hn_prj_atm_before_db.lsc?document_id={' \
           'project_id}&document_table=PRJ_PROJECT '
@@ -41,4 +41,5 @@ def hn_project_req():
 if __name__ == '__main__':
     coloredlogs.install(level='INFO')
     urllib3.disable_warnings()
-    hn_project_req()
+    # hn_project_req()
+    print(os.path.split('../export/hn/scripts'))

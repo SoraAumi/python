@@ -1,5 +1,4 @@
 from tabulate import tabulate
-import wcwidth
 
 
 def pretty_print(res_data):
@@ -15,4 +14,4 @@ def pretty_print(res_data):
 
 
 if __name__ == '__main__':
-    pretty_print([{"a": 1, "b": 2, "c": "3"}, {"a":4, "b":5, "c":6}])
+    pretty_print([{"a": 1, "b": 2, "c": "3"}, {"a": 4, "b": 5, "c": 6}])

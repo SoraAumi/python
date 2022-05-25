@@ -1,5 +1,5 @@
 # 导出系统编码
-from file.file_util import create_file, delete_dir, read_file, create_file_auto
+from file.file_util import FileUtil
 from oracle.oracle_init import db_init
 
 code_sql_str = '''
@@ -43,14 +43,17 @@ def get_sys_codes_script(in_code):
 
 
 def export_sys_codes(codes):
-    delete_dir("..\\export\\hn\\scripts\\")
+    FileUtil.delete_dir("..\\export\\hn\\scripts\\")
+    fu = FileUtil()
     for code in codes:
         sql_str = get_sys_codes_script(code)
-        create_file_auto('..\\export\\hn\\scripts\\' + "系统代码" + code + '.sql', sql_str)
+        fu.set_file_property('..\\export\\hn\\scripts\\' + "系统代码" + code + '.sql', sql_str)
+        fu.create_file_auto()
 
 
 def batch_export_sys_codes(path):
-    codes = read_file(file_path=path, return_type='list')
+    batch_file = FileUtil(path)
+    codes = batch_file.read_file(return_type='list')
     export_sys_codes(codes)
 
 

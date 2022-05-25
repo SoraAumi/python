@@ -6,6 +6,11 @@
         "description": "get_table_pk",
         "sql": "SELECT distinct column_name FROM all_cons_columns WHERE constraint_name in (SELECT constraint_name FROM all_constraints  WHERE UPPER(table_name) = UPPER('{table_name}') AND CONSTRAINT_TYPE = 'P')",
         "para": ["table_name"]
+      },
+      {
+        "description": "get_column_description",
+        "sql": " SELECT distinct * FROM user_col_comments WHERE TABLE_NAME=upper('{table_name}') and COLUMN_NAME = upper('{column_name}')",
+        "para": ["table_name", "column_name"]
       }
     ]
   },
@@ -15,6 +20,16 @@
       {
         "description": "get_instance_info",
         "sql": "select * from zj_wfl_instance_para_all_v v  where v.instance_id =  {instance_id}",
+        "para": ["instance_id"]
+      },
+      {
+        "description": "get_error_log",
+        "sql": "select * from sys_raise_app_errors where rownum < 10 order by 1 desc",
+        "para": []
+      },
+      {
+        "description": "get_instance_log",
+        "sql": "select * from zj_wfl_instance_log t5  where t5.instance_id = {instance_id} order by t5.log_id  desc",
         "para": ["instance_id"]
       }
     ]

@@ -4,7 +4,7 @@ import logging
 import os
 import chardet
 import coloredlogs
-from file.file_util import delete_dir, create_file_auto
+from file.file_util import FileUtil
 from oracle.oracle_init import db_init
 
 logger = logging.getLogger('file_module')
@@ -15,7 +15,8 @@ coloredlogs.DEFAULT_FIELD_STYLES = {'levelname': {'color': 'white', 'bold': True
 # 批量获取脚本
 def batch_export_script(project="HN", env="DEV", export_path="../export/hn/scripts"):
     conn, cursor = db_init(project, env)
-    delete_dir(export_path)
+    FileUtil.delete_dir(export_path)
+    ft = FileUtil()
     with open("../hn_scripts/batch_export_scripts.txt", encoding='utf-8') as sf:
         for function in sf:
             if function != '':
@@ -36,7 +37,8 @@ def batch_export_script(project="HN", env="DEV", export_path="../export/hn/scrip
                         script_str += str(line[0]) + '\r\n'
 
                 file_path = export_path + '/' + file_name + '.sql'
-                create_file_auto(file_path, f'begin\n{script_str}\ncommit;\nend;')
+                ft.set_file_property(file_path, f'begin\n{script_str}\ncommit;\nend;')
+                ft.create_file_auto()
     cursor.close()
     conn.close()
 
