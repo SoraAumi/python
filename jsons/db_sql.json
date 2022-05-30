@@ -31,6 +31,11 @@
         "description": "get_instance_log",
         "sql": "select * from zj_wfl_instance_log t5  where t5.instance_id = {instance_id} order by t5.log_id  desc",
         "para": ["instance_id"]
+      },
+      {
+        "description": "get_plan_info_by_number",
+        "sql": "select project_id, plan_id from hn_prj_plan_ln l, hn_prj_plan p where l.plan_id = p.plan_id and l.plan_id = {plan_id}",
+        "para": ["plan_id"]
       }
     ]
   }

@@ -41,7 +41,6 @@ class JsonFormatter:
         for item in obj:
             self.parse(item, intend_level)
             self.stack.append(',')
-        self.s
         self.stack.append(self.line_intend(intend_level - 1) + ']')
 
     def parse(self, obj, intend_level=0):

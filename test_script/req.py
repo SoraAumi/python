@@ -2,6 +2,8 @@ import json
 import os
 import time
 
+from file.file_util import FileUtil
+
 import coloredlogs
 import tqdm
 import requests
@@ -28,7 +30,7 @@ def send_wechat_msg(send_key, data):
 def hn_project_req():
     try:
         tqdm.tqdm.write("开始检索")
-        for item in tqdm.tqdm(read_file('./letters.txt', 'utf-8', 'list')):
+        for item in tqdm.tqdm(FileUtil('./letters.txt').read_file('utf-8', 'list')):
             res = get_request(req_url.format(project_id=item))
             if res['message'] != '':
                 tqdm.tqdm.write(f"项目:{item} 返回信息为:{res}")
@@ -41,5 +43,4 @@ def hn_project_req():
 if __name__ == '__main__':
     coloredlogs.install(level='INFO')
     urllib3.disable_warnings()
-    # hn_project_req()
-    print(os.path.split('../export/hn/scripts'))
+    hn_project_req()

@@ -15,5 +15,3 @@ logger.error("this is an error message")
 logger.critical("this is a critical message")
 
 
-for k, v in emoji.EMOJI_UNICODE.items():
-    print(v, end=' ')

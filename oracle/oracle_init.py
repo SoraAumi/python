@@ -54,8 +54,10 @@ def exec_sql_ultra(cursor, sql):
             return res, column_property
         else:
             logging.warning(f"未查询到数据，查询SQL为 {sql}")
+            exit(0)
     except Exception as e:
         logging.error(f"发生错误{e}，错误SQL为:\n{sql}")
+        exit(0)
 
 
 def get_sp_sql(desc, project="currency"):
@@ -87,6 +89,10 @@ def execute_model_sql(cursor, model_desc, model_paras, sql_type='currency'):
     return exec_sql_ultra(cursor, eval(f''' "{sql}" ''' + format_split(para, model_paras)))[0]
 
 
+def execute_self_sql(cursor, sql, para_desc, paras):
+    return exec_sql_ultra(cursor, eval(f''' "{sql}" ''' + format_split(para_desc, paras)))[0]
+
+
 def get_table_pk(cursor, table_name):
     res = execute_model_sql(cursor, model_desc="get_table_pk", model_paras=[table_name])
     return res[0][0]['COLUMN_NAME']
@@ -95,16 +101,16 @@ def get_table_pk(cursor, table_name):
 def main():
     conn, cursor = db_init('HN', 'DEV')
     # 获取工作流参数
-    pretty_print(execute_model_sql(cursor=cursor, sql_type="HN",
-                                   model_desc="get_instance_info", model_paras=["52559"]))
+    # pretty_print(execute_model_sql(cursor=cursor, sql_type="HN",
+    #                                model_desc="get_instance_info", model_paras=["52559"]))
     #
-    # # 获取表列描述信息
+    # 获取表列描述信息
     # pretty_print(execute_model_sql(cursor=cursor, sql_type="currency",
-    #                                model_desc="get_column_description", model_paras=["hls_bp_master", "bp_name"]))
+    #                                model_desc="get_column_description", model_paras=["con_contract", "division"]))
     #
     # # 获取错误日志
-    # pretty_print(execute_model_sql(cursor=cursor, sql_type="HN",
-    #                                model_desc="get_error_log", model_paras=[]))
+    pretty_print(execute_model_sql(cursor=cursor, sql_type="HN",
+                                   model_desc="get_error_log", model_paras=[]))
     #
     # # 获取工作流日志
     # pretty_print(execute_model_sql(cursor=cursor, sql_type="HN",
