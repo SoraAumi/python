@@ -8,6 +8,7 @@ declare
 {declare_sql}
 begin
 {insert_sql}
+commit;
 end;
 
 '''
@@ -26,9 +27,13 @@ def data_map(data_type):
     return map_str
 
 
-def insert_map(data_type, data, column_name, table_name, table_pk):
+def insert_map(data_type, data, column_name, table_name, table_pk, special_dict, special_code):
     map_str = ""
-    if data_type == "CLOB":
+    if str.lower(column_name) in special_dict:
+        map_str = special_dict[str.lower(column_name)]
+    elif str.lower(column_name) in special_code:
+        map_str = data
+    elif data_type == "CLOB":
         map_str = f"v_{column_name}"
     elif column_name == table_pk:
         map_str = f'{table_name}_s.nextval'
@@ -76,7 +81,7 @@ def set_declare_str(column_property):
     return declare_str
 
 
-def set_insert_str(result_data, column_property, table_name, table_pk):
+def set_insert_str(result_data, column_property, table_name, table_pk, sp_dict, special_code):
     insert_str_all = ""
 
     for data in result_data:
@@ -90,7 +95,7 @@ def set_insert_str(result_data, column_property, table_name, table_pk):
                 clob_set += f'''\t\tV_{column} := '{column_data}';\n'''
 
         for column in data.keys():
-            insert_str += f"{insert_map(column_property[column], data[column], column, table_name, table_pk)},"
+            insert_str += f"{insert_map(column_property[column], data[column], column, table_name, table_pk, sp_dict, special_code)},"
         insert_str_all += f"\tbegin \n\t\t{clob_set} \t\tinsert into {table_name} values ({insert_str[:-1]});" \
                           f"\n    end;\n"
     return insert_str_all
@@ -102,11 +107,16 @@ class OracleDBExport:
         self.env = env
         self.conn, self.cursor = db_init(project=project, env=env)
 
-    def export_db_data(self, sql, table_name):
+    # special_data: 特殊数据 直接取键值 special_code 特殊符号 直接取原值
+    def export_db_data(self, sql, table_name, special_data=None, special_code=None):
+        if special_code is None:
+            special_code = dict()
+        if special_data is None:
+            special_data = dict()
         result, column, cursor = get_sql_data(sql, self.project, self.env)
         table_pk = get_table_pk(cursor, table_name)
         execute_sql = insert_sql.format(declare_sql=set_declare_str(column),
-                                        insert_sql=set_insert_str(result, column, table_name, table_pk))
+                                        insert_sql=set_insert_str(result, column, table_name, table_pk, special_data, special_code))
         return execute_sql
 
     def export_db_data_file(self, sql, table_name, file_path='../export/script/'):

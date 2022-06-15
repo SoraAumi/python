@@ -1,3 +1,4 @@
+import datetime
 import logging
 import xlrd
 
@@ -16,7 +17,13 @@ def get_excel_row_col(path, sheet_name):
     for i in range(n_rows):
         xls_list = []
         for j in range(n_cols):
-            xls_list.append(sheet.cell(i, j).value)
+            if sheet.cell(i, j).ctype == 3:
+                time_str = xlrd.xldate_as_datetime(sheet.cell(i, j).value, 0).strftime('%Y/%m/%d %H:%M:%S')
+                xls_list.append(time_str)
+            elif sheet.cell(i, j).ctype == 2:
+                xls_list.append(int(sheet.cell(i, j).value))
+            else:
+                xls_list.append(sheet.cell(i, j).value)
         sheet_data.append(xls_list)
 
     return sheet_data
@@ -43,12 +50,8 @@ def get_query_data(sheet_data):
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
-    excel_list, excel_column = get_query_data(get_excel_row_col("./excels/da.xlsx", "档案"))
+    excel_list, excel_column = get_query_data(get_excel_row_col("excels/担保额度历史数据收集表0520.xls", "担保总额申请收集"))
     for rec in excel_list:
-        c = "'" + rec["centralized_light_power_flag"] + "'"
-        b = "'" + rec["binary_classification_code"] + "'"
-        s = "'" + rec["second_classification_name"] + "'"
-        print(f'update hn_second_classification set centralized_light_power_flag={c}'
-              f' where binary_classification_code={b} '
-              f'and second_classification_name={s};')
+        print(rec)
+
 

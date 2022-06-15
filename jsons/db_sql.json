@@ -36,6 +36,16 @@
         "description": "get_plan_info_by_number",
         "sql": "select project_id, plan_id from hn_prj_plan_ln l, hn_prj_plan p where l.plan_id = p.plan_id and l.plan_id = {plan_id}",
         "para": ["plan_id"]
+      },
+      {
+        "description": "get_wfl_rule_code",
+        "sql": "select * from zj_wfl_workflow_rules where rule_code = '{rule_code}'",
+        "para": ["rule_code"]
+      },
+      {
+        "description": "get_sys_parameter",
+        "sql": "select sys_parameter_pkg.value('{parameter_code}') as sys_parameter from dual",
+        "para": ["parameter_code"]
       }
     ]
   }

@@ -9,7 +9,6 @@ import tqdm
 import requests
 import urllib3
 
-
 req_url = 'https://business.huanengleasing.cn/modules/wfl_screen/PRJ_PROJECT/hn_prj_atm_before_db.lsc?document_id={' \
           'project_id}&document_table=PRJ_PROJECT '
 

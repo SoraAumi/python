@@ -59,18 +59,16 @@ class FileUtil:
         logger.info(f"🌼 {dirs} 文件夹的文件已经被清空啦")
 
     # 获取文件夹下的所有文件名
-    def get_dir_file_path(self):
-        file_list = []
-        for root, dirs, files in os.walk(self.fp):
-            # 当前目录路径
-            # print(root)
-            # 当前路径下所有子目录
-            # print(dirs)
-            # 当前路径下所有非目录子文件
-            for file in files:
-                file_list.append(self.fp + "\\" + file)
-
-        return file_list
+    @staticmethod
+    def show_files(path, all_files):
+        file_list = os.listdir(path)
+        for file in file_list:
+            cur_path = os.path.join(path, file)
+            if os.path.isdir(cur_path):
+                FileUtil.show_files(cur_path, all_files)
+            else:
+                all_files.append(file)
+        return all_files
 
     # 创建文件(没有路径自动生成)
     def create_file_auto(self):
