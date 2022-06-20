@@ -74,9 +74,7 @@ def contract_model(models_path):
 def model_para_sync():
     fp = FileUtil('./temporary_text.txt')
     conn, cursor = db_init('HN', 'DEV')
-    ret_sql = ""
     uat_con, uat_cur = db_init('HN', 'UAT')
-    count = 0
     for code in fp.read_file(return_type='list'):
         sql = "\
             select ft.templet_code, fp.bookmark,  fl.* from hls_doc_file_tmp_para_link fl, \
@@ -88,7 +86,6 @@ def model_para_sync():
         exe_data = execute_self_sql(cursor=cursor, paras=[code], para_desc=["templet_code"],
                                     sql=sql)
 
-        # print(len(exe_data))
         if exe_data is not None:
             for link_data in exe_data:
                 ret_sql = f'''insert into hls_doc_file_tmp_para_link values(hls_doc_file_tmp_para_link_s.nextval,
@@ -98,7 +95,6 @@ def model_para_sync():
                                          '{link_data['FONT_SIZE']}','{link_data['UNDERLINE']}','{link_data['IND_WIDTH']}',
                                          '{link_data['BOLD']}'); \n'''
                 e_sql = "begin " + ret_sql.replace('None', '') + "commit;end;"
-                # print(e_sql)
                 uat_cur.execute(e_sql)
 
 
@@ -121,9 +117,8 @@ def model_condition_head():
 
 # 模板条件定义
 def model_condition_line():
-    conn, cursor = db_init("HN", "DEV")
     dbe = OracleDBExport('HN', 'DEV')
-    sql_head = special_select_head(cursor, "con_contract_tmpt_clause",
+    sql_head = special_select_head(dbe.cursor, "con_contract_tmpt_clause",
                                    {"TMPT_ID": "('(select templet_id from con_clause_templet "
                                                "where templet_code='''||(select templet_code from con_clause_templet where TEMPLET_ID = tmpt_id)||''')') as TMPT_ID"})
     exe_sql = f"select {sql_head} from con_contract_tmpt_clause where TMPT_ID in " \
@@ -145,3 +140,5 @@ if __name__ == '__main__':
 
     # Step4 同步模板定义
     print(model_condition_line())
+    # Step5 模板条件定义
+

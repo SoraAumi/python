@@ -18,6 +18,7 @@ def trans_json(result, columns):
 
 
 def get_db_info(project, env):
+    project, env = str.upper(project), str.upper(env)
     file = open("../jsons/db_setting.json", "rb")
     file_json = json.load(file)
     for project_list in file_json:
@@ -54,7 +55,7 @@ def exec_sql_ultra(cursor, sql):
             return res, column_property
         else:
             # logging.warning(f"未查询到数据，查询SQL为 {sql}")
-            return None, None
+            return [], []
     except Exception as e:
         logging.error(f"发生错误{e}，错误SQL为:\n{sql}")
 
@@ -81,6 +82,17 @@ def format_split(para, para_value):
             split_str += f"{para[i]}='{para_value[i]}', "
 
         return f".format({split_str[:-2]})"
+
+
+def seq_generator_sql(table_name):
+    return f'''
+        create sequence {table_name}_s
+            minvalue 1  
+            maxvalue 999999999999999999999999999 
+            start with 1 
+            increment by 1 
+            nocache
+    '''
 
 
 def execute_model_sql(cursor, model_desc, model_paras, sql_type='currency'):
@@ -129,21 +141,21 @@ def main():
     #                                model_desc="get_column_description", model_paras=["con_contract", "division"]))
     #
     # # 获取错误日志
-    pretty_print(execute_model_sql(cursor=cursor, sql_type="HN",
-                                   model_desc="get_error_log", model_paras=[]))
+    # pretty_print(execute_model_sql(cursor=cursor, sql_type="HN",
+    #                                model_desc="get_error_log", model_paras=[]))
     #
     # # 获取工作流日志
     # pretty_print(execute_model_sql(cursor=cursor, sql_type="HN",
     #                                model_desc="get_instance_log", model_paras=["57038"]))
     # # 获取工作流审批规则信息
-    # pretty_print(execute_model_sql(cursor=cursor, sql_type="HN",
-    #                                model_desc="get_wfl_rule_code", model_paras=["GET_PLAN_BUSINESS_INSIDER_USER"]))
+    pretty_print(execute_model_sql(cursor=cursor, sql_type="HN",
+                                   model_desc="get_wfl_rule_code", model_paras=["RISK_GET_ASSIGN_USER"]))
     # # 获取系统参数
     # pretty_print(execute_model_sql(cursor=cursor, sql_type="HN",
     #                                model_desc="get_sys_parameter", model_paras=["ACR_INTERFACE_DEFAULT_EMAIL"]))
 
 
 if __name__ == '__main__':
-    # main()
-    conn, cursor = db_init("HN", 'DEV')
-    print(get_table_pk(cursor, "con_contract_tmpt_clause"))
+    main()
+    # conn, cursor = db_init("HN", 'DEV')
+    # print(get_table_pk(cursor, "con_contract_tmpt_clause"))

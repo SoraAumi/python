@@ -105,5 +105,6 @@ def standardized_file_encode(path):
 if __name__ == '__main__':
     edit_path = '''C:\\Users\\Master Yi\\Desktop\\档案归档发版\\sql\\视图'''
 
-    batch_export_script(project="HN", env="DEV")
-    # batch_execute_sql(project="HN", env="UAT")
+    exec_path = '..\\export\\oracle\\plsql_script_export\\'
+    # batch_export_script(project="HN", env="DEV")
+    batch_execute_sql(project="HN", env="UAT")
