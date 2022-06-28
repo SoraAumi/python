@@ -26,6 +26,9 @@ def send_wechat_msg(send_key, data):
     return response.text
 
 
+
+
+
 def hn_project_req():
     try:
         tqdm.tqdm.write("开始检索")
@@ -42,4 +45,4 @@ def hn_project_req():
 if __name__ == '__main__':
     coloredlogs.install(level='INFO')
     urllib3.disable_warnings()
-    hn_project_req()
+    print(os.path.splitext('123.1.docx')[1])

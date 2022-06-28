@@ -2,6 +2,8 @@ import os
 import shutil
 import uuid
 
+import requests
+
 from file.file_util import FileUtil
 from oracle.oracle_init import db_init, execute_self_sql, special_select_head
 from oracle.oracle_db_export import OracleDBExport
@@ -20,8 +22,8 @@ begin
   
   insert into hls_doc_file_templet values(v_template_id, '{templet_code}', '{templet_name}', 'CONTRACT_FILE', null, null, null, 'Y', sysdate, 1, sysdate, 1, null, null);
   
-  insert into fnd_atm_attachment values(v_attachment_id, 'fnd_atm_attachment_multi', v_attachment_multi_id, '', 'docx', 
-                                        'application/msword', '{templet_name}.docx', {file_size}, '{file_path}', sysdate, 1, sysdate , 1,  'N', 0);
+  insert into fnd_atm_attachment values(v_attachment_id, 'fnd_atm_attachment_multi', v_attachment_multi_id, '', '{templet_end}', 
+                                        'application/msword', '{templet_name}.{templet_end}', {file_size}, '{file_path}', sysdate, 1, sysdate , 1,  'N', 0);
   
   insert into fnd_atm_attachment_multi values (v_attachment_multi_id, 'HLS_DOC_FILE_TEMPLET', v_template_id, v_attachment_id,
                                         sysdate, 1, sysdate, 1, null, 1, -1, -1, -1, null, null, 0, null, null);
@@ -43,6 +45,45 @@ def get_template_name(dir_path):
     return FileUtil.show_files(dir_path, [])
 
 
+def download_file(attachment_id, file_path):
+    down_res = requests.get(url=f"http://10.213.234.43:9081/atm_download.lsc?attachment_id={attachment_id}")
+    with open(file_path, "wb") as code:
+        code.write(down_res.content)
+
+
+# 模板下载
+def contract_model_download(download_path, env):
+    conn, cursor = db_init('HN', env)
+    sql = "select f.attachment_id, t.templet_name, f.file_type_code, f.file_name from hls_doc_file_templet t, fnd_atm_attachment_multi fm, fnd_atm_attachment f\
+                                where fm.attachment_id = f.attachment_id and \
+                                fm.table_name = 'HLS_DOC_FILE_TEMPLET' and t.templet_id = fm.table_pk_value " \
+          "and                  t.enabled_flag = 'Y' and f.del_flag = 0"
+    template_data = \
+        execute_self_sql(cursor=cursor, paras=[], para_desc=[],
+                         sql=sql)
+    for att in template_data:
+        download_file(att['ATTACHMENT_ID'], download_path + att['TEMPLET_NAME'] + '.' + att['FILE_TYPE_CODE'])
+
+
+def model_replace(model_path, replace_env):
+    conn, cursor = db_init('HN', replace_env)
+    sql = "select f.file_path, t.templet_name, f.attachment_id from hls_doc_file_templet t, fnd_atm_attachment_multi fm, fnd_atm_attachment f\
+                where fm.attachment_id = f.attachment_id and \
+                fm.table_name = 'HLS_DOC_FILE_TEMPLET' and t.templet_id = fm.table_pk_value and t.enabled_flag = 'Y'\
+                and f.del_flag = 0"
+    template_data = \
+        execute_self_sql(cursor=cursor, paras=[], para_desc=[],
+                         sql=sql)
+
+    count = 0
+
+    for file_path in all_files_path(model_path):
+        if '~$' not in file_path:
+            path, file_name = os.path.split(file_path)
+            file_size = os.stat(file_path).st_size
+            print(file_size)
+
+
 # 模板上传
 def contract_model(models_path):
     sql_context = "begin "
@@ -56,13 +97,14 @@ def contract_model(models_path):
                             where fm.attachment_id = f.attachment_id and \
                             fm.table_name = 'HLS_DOC_FILE_TEMPLET' and f.file_name like '{templet_name}%') and ENABLED_FLAG = 'Y'"
             template_data = \
-                execute_self_sql(cursor=cursor, paras=[file_name.replace('docx', 'doc')], para_desc=["templet_name"],
+                execute_self_sql(cursor=cursor, paras=[os.path.splitext(file_name)[0]], para_desc=["templet_name"],
                                  sql=sql)[0]
             uuid_name = str.upper(str(uuid.uuid4()).replace('-', ''))
             model_file_path = '/u01/hls_attachment/2022/06/' + uuid_name
             model_file_size = os.path.getsize(file_path)
             sql_context += exec_sql.format(templet_code=template_data['TEMPLET_CODE'],
                                            templet_name=template_data['TEMPLET_NAME'],
+                                           templet_end=os.path.splitext(file_name)[1],
                                            file_size=model_file_size, file_path=model_file_path)
             shutil.copyfile(file_path, f'./export_words/{uuid_name}')
     sql_context += 'end;'
@@ -129,6 +171,10 @@ def model_condition_line():
 
 
 if __name__ == '__main__':
+    # Step 0 下载模板
+
+    contract_model_download('./model_download/', 'DEV')
+
     # Step1 同步模板
 
     # Step2 同步参数
@@ -139,6 +185,7 @@ if __name__ == '__main__':
     # model_para_sync()
 
     # Step4 同步模板定义
-    print(model_condition_line())
+    # print(model_condition_line())
     # Step5 模板条件定义
 
+#  model_replace('./model_download/', 'UAT')

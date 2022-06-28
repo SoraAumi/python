@@ -91,7 +91,7 @@ def set_insert_str(result_data, column_property, table_name, table_pk, sp_dict, 
         for column in column_property.keys():
             if column_property[column] == 'CLOB':
                 column_data = '' if data[column] is None else data[column]
-                column_data = str(column_data).replace("'", "''''")
+                column_data = str(column_data).replace("'", "'||''''||'")
                 clob_set += f'''\t\tV_{column} := '{column_data}';\n'''
 
         for column in data.keys():

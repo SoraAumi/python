@@ -29,6 +29,7 @@ def get_db_info(project, env):
 
 
 def db_init(project, env):
+    env = str.upper(env)
     if env in ["DEV", "UAT", "PROD", "PRE"]:
         user, password, link = get_db_info(project, env)
         conn = cx_Oracle.connect(user, password, link)
@@ -133,12 +134,12 @@ def execute_sql_envs(sql, project, envs=None):
 def main():
     conn, cursor = db_init('HN', 'DEV')
     # 获取工作流参数
-    # pretty_print(execute_model_sql(cursor=cursor, sql_type="HN",
-    #                                model_desc="get_instance_info", model_paras=["59258"]))
+    pretty_print(execute_model_sql(cursor=cursor, sql_type="HN",
+                                   model_desc="get_instance_info", model_paras=["63018"]))
     #
     # 获取表列描述信息
-    # pretty_print(execute_model_sql(cursor=cursor, sql_type="currency",
-    #                                model_desc="get_column_description", model_paras=["con_contract", "division"]))
+    pretty_print(execute_model_sql(cursor=cursor, sql_type="currency",
+                                   model_desc="get_column_description", model_paras=["prj_project", "content_wfl_status"]))
     #
     # # 获取错误日志
     # pretty_print(execute_model_sql(cursor=cursor, sql_type="HN",
@@ -152,10 +153,15 @@ def main():
                                    model_desc="get_wfl_rule_code", model_paras=["RISK_GET_ASSIGN_USER"]))
     # # 获取系统参数
     # pretty_print(execute_model_sql(cursor=cursor, sql_type="HN",
-    #                                model_desc="get_sys_parameter", model_paras=["ACR_INTERFACE_DEFAULT_EMAIL"]))
+    #                                model_desc="get_sys_parameter", model_paras=["RISK_GET_ASSIGN_USER"]))
+    print("Author: Sora")
+
+
+def sql_gui():
+    return None
 
 
 if __name__ == '__main__':
     main()
-    # conn, cursor = db_init("HN", 'DEV')
-    # print(get_table_pk(cursor, "con_contract_tmpt_clause"))
+    # conn, cursor = db_init("HN", 'PROD')
+    # execute_sql_envs(sql='''comment on column prj_quotation.irr_adjust_reason is 'XIRR调整理由' ''', envs=["PROD"], project="HN")

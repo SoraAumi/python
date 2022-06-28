@@ -1,0 +1,7 @@
+{
+  "sys_codes": ["PRJ_PLAN_CON","PRJ_PLAN_CON_TWO","PRJ_PLAN_CON_THREE"],
+  "views": ["prj_project_content_bak_lv","prj_project_v","PRJ_PROJECT_VIRTUAL_CON_LV","prj_project_content_v","prj_project_virtual_con_lv"],
+  "tables": ["prj_project","con_contract_content"],
+  "packages": ["sdic_content_bookmark_pkg","hn_other_workflow_remind_pkg","hn_plan_workflow_remind_pkg","hn_prj_plan_wfl_approve_pkg"],
+  "function_codes": ["PRJ506", "HN1012"]
+}

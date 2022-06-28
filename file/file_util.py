@@ -33,30 +33,30 @@ class FileUtil:
         (fp, temp_filename) = os.path.split(self.target_path)
 
         if os.path.exists(self.target_path):
-            logger.warning(f"🌸文件{temp_filename}已经存在 将会被覆盖啦")
+            print(f"文件-{temp_filename}已经存在 将会被覆盖啦")
 
         f = open(self.target_path, 'w+', encoding='utf-8')
         f.write(self.target_content)
         f.close()
 
-        logger.info(f"🍀文件 {self.file_name} 已经生成 路径为 {self.fp}")
+        print(f"文件-{self.file_name} 已经生成 路径为 {self.fp}")
 
     # 检验路径是否存在 不存在自动生成
     def check_path_exist(self, dirs=None):
         dirs = self.fp if dirs is None else dirs
         if not os.path.exists(dirs):
             os.makedirs(dirs)
-            logger.warning(f"🏵️ 路径不存在，已经自动创建路径{dirs}啦")
+            print(f"路径不存在，已经自动创建路径{dirs}啦")
 
     # 清空文件夹
     @staticmethod
     def delete_dir(dirs):
         if not os.path.exists(dirs):
-            logger.warning(f"💮  哎呀 删除的文件夹不存在呢")
+            logger.warning(f"哎呀 删除的文件夹不存在呢")
         else:
             shutil.rmtree(dirs)
             os.mkdir(dirs)
-        logger.info(f"🌼 {dirs} 文件夹的文件已经被清空啦")
+        print(f"{dirs}-文件夹的文件已经被清空啦")
 
     # 获取文件夹下的所有文件名
     @staticmethod

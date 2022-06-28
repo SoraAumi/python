@@ -1,3 +1,1 @@
-hls_sys_data_load_pkg.function_load('PRJ506T');
-hls_sys_data_load_pkg.function_load('PRJ506B');
-hls_sys_data_load_pkg.function_load('PRJ506_BL');
+sys_load_hls_doc_layout_pkg.export_button('PRJ506D_WFL','N',null,1);

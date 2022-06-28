@@ -1,34 +1,42 @@
 [
   {
     "script": "zj_wfl_workflow_output_pkg.export_workflow_type",
+    "model": "zj_wfl_workflow_output_pkg.export_workflow_type('{item_name}');\n",
     "name": "工作流类型"
   },
   {
     "script": "zj_wfl_workflow_output_pkg.export_workflow_service",
+    "model": "zj_wfl_workflow_output_pkg.export_workflow_service('{item_name}');",
     "name": "工作流页面"
   },
   {
     "script": "zj_wfl_workflow_output_pkg.export_workflow_procedure",
+    "model": "zj_wfl_workflow_output_pkg.export_workflow_procedure('{item_name}');",
     "name": "工作流过程"
   },
   {
     "script": "zj_wfl_workflow_output_pkg.export_workflow",
+    "model": "zj_wfl_workflow_output_pkg.export_workflow('{item_name}','N');",
     "name": "工作流"
   },
   {
     "script": "zj_wfl_workflow_output_pkg.export_workflow_assign_rule",
+    "model": "zj_wfl_workflow_output_pkg.export_workflow_assign_rule('{item_name}')",
     "name": "工作流审批人定义"
   },
   {
     "script": "sys_load_hls_doc_layout_pkg.export_button",
+    "model": "sys_load_hls_doc_layout_pkg.export_button('{item_name}','N',null,1);",
     "name": "页面布局按钮配置"
   },
   {
     "script": "sys_load_hls_doc_layout_pkg.export_all",
+    "model": "sys_load_hls_doc_layout_pkg.export_all('{item_name}','N',null,-1);",
     "name": "页面布局配置"
   },
   {
     "script": "hls_sys_data_load_pkg.function_load",
+    "model": "hls_sys_data_load_pkg.function_load('{item_name}');",
     "name": "功能定义"
   }
 ]
