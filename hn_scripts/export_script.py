@@ -191,6 +191,7 @@ def gui_export_scripts():
                 print(e)
         elif event == '导出':
             try:
+                FileUtil.delete_dir("../export/hn/scripts")
                 export_script_main(values['export_sql'].split("\n"), project="HN",
                                    env=values["export_env"], export_path="../export/hn/scripts")
             except Exception as e:
@@ -204,12 +205,11 @@ def main():
     file_json = json.load(file)
 
 
-
 if __name__ == '__main__':
-    edit_path = '''C:\\Users\\Master Yi\\Desktop\\档案归档发版\\sql\\视图'''
-
-    exec_path = '..\\export\\oracle\\plsql_script_export\\'
-    batch_export_script(project="HN", env="DEV")
-    batch_execute_sql(project="HN", env="UAT")
-    # gui_export_scripts()
+    # edit_path = '''C:\\Users\\Master Yi\\Desktop\\档案归档发版\\sql\\视图'''
+    #
+    # exec_path = '..\\export\\oracle\\plsql_script_export\\'
+    # batch_export_script(project="HN", env="DEV")
+    # batch_execute_sql(project="HN", env="UAT")
+    gui_export_scripts()
     # input("press enter to continue")

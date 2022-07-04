@@ -4,10 +4,12 @@
     "data": [
       {
         "description": "get_table_pk",
+        "desc_chinese": "获取表主键",
         "sql": "SELECT distinct column_name FROM all_cons_columns WHERE constraint_name in (SELECT constraint_name FROM all_constraints  WHERE UPPER(table_name) = UPPER('{table_name}') AND CONSTRAINT_TYPE = 'P')",
         "para": ["table_name"]
       },
       {
+        "desc_chinese": "获取表列描述",
         "description": "get_column_description",
         "sql": " SELECT distinct * FROM user_col_comments WHERE TABLE_NAME=upper('{table_name}') and COLUMN_NAME = upper('{column_name}')",
         "para": ["table_name", "column_name"]
@@ -18,31 +20,37 @@
     "project": "HN",
     "data": [
       {
+        "desc_chinese": "获取工作流参数",
         "description": "get_instance_info",
-        "sql": "select * from zj_wfl_instance_para_all_v v  where v.instance_id =  {instance_id}",
+        "sql": "select parameter_code, parameter_desc, parameter_value from zj_wfl_instance_para_all_v v  where v.instance_id =  {instance_id}",
         "para": ["instance_id"]
       },
       {
+        "desc_chinese": "获取错误日志",
         "description": "get_error_log",
         "sql": "select * from sys_raise_app_errors where rownum < 10 order by 1 desc",
         "para": []
       },
       {
+        "desc_chinese": "获取工作流日志",
         "description": "get_instance_log",
         "sql": "select * from zj_wfl_instance_log t5  where t5.instance_id = {instance_id} order by t5.log_id  desc",
         "para": ["instance_id"]
       },
       {
+        "desc_chinese": "获取项目方案下的项目ID",
         "description": "get_plan_info_by_number",
         "sql": "select project_id, plan_id from hn_prj_plan_ln l, hn_prj_plan p where l.plan_id = p.plan_id and l.plan_id = {plan_id}",
         "para": ["plan_id"]
       },
       {
+        "desc_chinese": "获取工作流审批规则代码信息",
         "description": "get_wfl_rule_code",
         "sql": "select * from zj_wfl_workflow_rules where rule_code = '{rule_code}'",
         "para": ["rule_code"]
       },
       {
+        "desc_chinese": "获取系统参数",
         "description": "get_sys_parameter",
         "sql": "select sys_parameter_pkg.value('{parameter_code}') as sys_parameter from dual",
         "para": ["parameter_code"]

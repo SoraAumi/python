@@ -125,5 +125,6 @@ class OracleDBExport:
 
 if __name__ == '__main__':
     dbe = OracleDBExport("HN", "DEV")
-    dbe.export_db_data_file("select * from HN_PAYMENT_CONDITION_HISTORY where rownum < 100",
-                            'HN_PAYMENT_CONDITION_HISTORY')
+    dbe.export_db_data_file("SELECT * FROM HLS_DOC_LAYOUT_CONFIG \
+                          where layout_code = 'HN_PRJ_PLAN_CHANGE_MODIFY_BL' and tab_code = 'F_QUOTATION'",
+                            'HLS_DOC_LAYOUT_CONFIG')

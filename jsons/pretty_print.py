@@ -2,6 +2,8 @@ from tabulate import tabulate
 
 
 def pretty_print(res_data):
+
+
     if len(res_data) > 0:
         grid_head = res_data[0].keys()
         grid_data = []
@@ -10,7 +12,7 @@ def pretty_print(res_data):
             for column in grid_head:
                 gd.append(data[column])
             grid_data.append(gd)
-        print(tabulate(grid_data, headers=grid_head, tablefmt='grid'))
+        print(tabulate(grid_data, headers=grid_head, tablefmt='simple'))
 
 
 if __name__ == '__main__':

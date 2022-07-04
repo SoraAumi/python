@@ -8,9 +8,10 @@ sg.theme('BlueMono')  # 设置当前主题
 layout = [
     [sg.Button('脚本导入导出工具', size=(8, 3), font=('微软雅黑', 12)),
      sg.Button('数据库同步工具Beta', size=(8, 3), font=('微软雅黑', 12)),
-     sg.Button('常用查询Beta', size=(8, 3), font=('微软雅黑', 12))],
-    [sg.Frame(layout=[[sg.Text("作者: Sora")], [sg.Text("操作方法详情请见readme.md文档, 本项目已开源\n"
-                                                      "Github仓库地址: https://github.com/jjyilinfeng/python-scripts")]],
+     sg.Button('常用查询', size=(8, 3), font=('微软雅黑', 12))],
+    [sg.Frame(layout=[[sg.Text("作者: Sora")], [sg.Text("带有Beta的功能用的时候需要格外注意")],
+                      [sg.Text("操作方法详情请见readme.md文档, 本项目已开源\n"
+                               "Github仓库地址: https://github.com/jjyilinfeng/python-scripts")]],
               title='注意啦注意啦', title_color='black', relief=sg.RELIEF_SUNKEN, tooltip='target envs')]
 ]
 

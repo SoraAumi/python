@@ -1,6 +1,7 @@
 import json
 import logging
 import cx_Oracle
+import PySimpleGUI as sg
 from jsons.pretty_print import pretty_print
 
 
@@ -135,11 +136,12 @@ def main():
     conn, cursor = db_init('HN', 'DEV')
     # 获取工作流参数
     pretty_print(execute_model_sql(cursor=cursor, sql_type="HN",
-                                   model_desc="get_instance_info", model_paras=["63018"]))
+                                   model_desc="get_instance_info", model_paras=["60581"]))
     #
     # 获取表列描述信息
     pretty_print(execute_model_sql(cursor=cursor, sql_type="currency",
-                                   model_desc="get_column_description", model_paras=["prj_project", "content_wfl_status"]))
+                                   model_desc="get_column_description",
+                                   model_paras=["prj_project", "content_wfl_status"]))
     #
     # # 获取错误日志
     # pretty_print(execute_model_sql(cursor=cursor, sql_type="HN",
@@ -158,10 +160,49 @@ def main():
 
 
 def sql_gui():
-    return None
+    sg.theme('BlueMono')
+    file = open("../jsons/db_sql.json", "rb")
+    file_json = json.load(file)
+
+    desc_list = [i['desc_chinese'] for i in file_json[1]['data']]
+
+    layout = [
+        [sg.Frame(layout=[[sg.Text('查询环境:', font=("微软雅黑", 10)),
+                           sg.Combo(['DEV', 'UAT', 'PRE', 'PROD'], default_value='DEV', key="env")],
+                          [sg.Text('查询类型:', font=("微软雅黑", 10)),
+                           sg.Combo(desc_list, key="item_type"), sg.Button("查询")],
+                          [sg.Text('参数1:', font=("微软雅黑", 10)), sg.InputText(key="para0")],
+                          [sg.Text('参数2:', font=("微软雅黑", 10)), sg.InputText(key="para1")]],
+                  title='查询条件', relief=sg.RELIEF_SUNKEN, tooltip='origin envs')],
+        [sg.Text('程序运行记录', justification='center', font=("微软雅黑", 10))],
+        [sg.Output(size=(120, 8), font=("微软雅黑", 9), key="running_log")]
+    ]
+
+    window = sg.Window('常用查询 Author: Sora', layout)
+
+    while True:
+        event, values = window.read()
+        if event in (None, 'Cancel'):  # 如果用户关闭窗口或点击`Cancel`
+            break
+        elif event == '查询':
+            cursor = db_init("HN", values['env'])[1]
+
+            window['running_log'].update("")
+
+            for i in file_json[1]['data']:
+                if i['desc_chinese'] == values['item_type']:
+                    para_list = []
+                    for t in range(len(i['para'])):
+                        para_list.append(values[f"para{t}"])
+                    pretty_print(execute_model_sql(cursor=cursor, sql_type="HN",
+                                                   model_desc=i['description'],
+                                                   model_paras=para_list))
 
 
 if __name__ == '__main__':
-    main()
+    sql_gui()
+
+    # main()
+
     # conn, cursor = db_init("HN", 'PROD')
     # execute_sql_envs(sql='''comment on column prj_quotation.irr_adjust_reason is 'XIRR调整理由' ''', envs=["PROD"], project="HN")

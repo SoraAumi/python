@@ -162,9 +162,9 @@ def plsql_gui():
     # 界面布局，将会按照列表顺序从上往下依次排列，二级列表中，从左往右依此排列
     layout = [
         [sg.Frame(layout=[[sg.Text('选择同步从环境:', font=("微软雅黑", 10)),
-                           sg.Combo(['DEV', 'UAT', 'PRE', 'PROD'],default_value='DEV', key="export_env"),
+                           sg.Combo(['DEV', 'UAT', 'PRE', 'PROD'], default_value='DEV', key="export_env"),
                            sg.Text('导出类型:', font=("微软雅黑", 10)),
-                           sg.Combo(['package', 'view', 'table'],default_value='view', key="item_type")]],
+                           sg.Combo(['package', 'view', 'table'], default_value='view', key="item_type")]],
                   title='源环境', title_color='black', relief=sg.RELIEF_SUNKEN, tooltip='origin envs')],
         [sg.Text('同步视图包一个一行 表一次只能一个:', font=("微软雅黑", 10))],
         [sg.Multiline(size=(90, 12), key="export_sql")],
@@ -203,9 +203,12 @@ def plsql_gui():
 
 
 if __name__ == '__main__':
+    item_list = ["hn_other_workflow_remind_pkg", "hn_plan_workflow_remind_pkg"]
+    item_type = "package"
+
     # 同步视图 包
-    sync_exec_sql(project="HN", sync_envs=['UAT'], item_type="view",
-                  original_env="UAT", item_list=['prj_project_con_seal_lv'])
+    # sync_exec_sql(project="HN", sync_envs=['UAT', 'PRE'], item_type=item_type,
+    #               original_env="PROD", item_list=item_list)
 
     # 生成视图 包的同步文件
     # FileUtil.delete_dir('../export/oracle/plsql_script_export/')
@@ -213,7 +216,7 @@ if __name__ == '__main__':
     #     export_sql(item_name=pck, env="DEV", item_type="package")
 
     # 同步表
-    # sync_table("hn_prj_plan", "HN", "DEV", ["PROD"])
+    sync_table("prj_quotation", "HN", "PROD", ["PRE"])
 
     # 同步 包某个过程
     # replace_part_package(["csh_payment_workflow_pkg.workflow_finish"], "HN", "DEV", ["UAT"])
